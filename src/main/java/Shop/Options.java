@@ -5,17 +5,13 @@ import java.util.Scanner;
 
 public class Options {
 
-    private  boolean isValidated = false;
-    private Customer customer;
-    private Product product;
-    private Sales sale;
-
     Scanner scanner = new Scanner(System.in);
     ArrayList<Customer> customers = new ArrayList<>();
     ArrayList<Product> products = new ArrayList<>();
     ArrayList<Sales> sales = new ArrayList<>();
 
     void addCustomer() {
+        int customerId = customers.size();
         System.out.println("Please enter your name: ");
         String customerName = scanner.next();
 
@@ -24,7 +20,7 @@ public class Options {
 
         double moneySpend = 0;
 
-        Customer newCustomer = new Customer(customerName, balance, moneySpend);
+        Customer newCustomer = new Customer(customerId, customerName, balance, moneySpend);
         this.customers.add(newCustomer);
         System.out.println("Customer " + newCustomer.getCustomerName() + "  now is a member of Walmart!");
     }
@@ -59,6 +55,7 @@ public class Options {
         this.sales.add(newSale);
         System.out.println("New product was added on shop sale list!");
     }
+
     public void allSales() {
         //Existing sale products in the shop
         Sales butter = new Sales("butter", 0.99, 5);
@@ -86,11 +83,11 @@ public class Options {
     public void allCustomers() {
 
         //Existing customers in the shop
-        Customer zydre = new Customer("Zydre", 100, 0);
+        Customer zydre = new Customer(customers.size(), "zydre", 100, 0);
         this.customers.add(zydre);
-        Customer benas = new Customer("Benas", 50, 0);
+        Customer benas = new Customer(customers.size(),"Benas", 50, 0);
         this.customers.add(benas);
-        Customer rima = new Customer("Rima", 150, 0);
+        Customer rima = new Customer(customers.size(),"Rima", 150, 0);
         this.customers.add(rima);
 
 
@@ -99,11 +96,11 @@ public class Options {
         System.out.printf("              LIST OF ALL CUSTOMERS                ");
         System.out.println();
         System.out.println("--------------------------------------------------");
-        System.out.printf("%15s %15s %15s", "Customer name", "Balance", "Money spend");
+        System.out.printf("%5s %15s %10s %15s", "ID", "Customer name", "Balance", "Money spend");
         System.out.println();
         System.out.println("--------------------------------------------------");
         for (Customer customer : customers) {
-            System.out.format("%15s %15s %15s", customer.getCustomerName(), customer.getBalance(), customer.getMoneySpend());
+            System.out.format("%5s %10s %15s %15s", customer.getCustomerId(), customer.getCustomerName(), customer.getBalance(), customer.getMoneySpend());
             System.out.println();
         }
         System.out.println("--------------------------------------------------");
@@ -141,53 +138,85 @@ public class Options {
             System.out.format("%15s %15s %15s", sales.getProductName(), sales.getPrice(), sales.getQuantity());
             System.out.println();
         }
-            System.out.println("--------------------------------------------------");
+        System.out.println("--------------------------------------------------");
+    }
+
+    public void buyProduct() {
+
+        System.out.println("Please enter your customer ID: ");
+        int customerId = scanner.nextInt();
+        String selectedCustomerName = customers. get(customerId).getCustomerName();
+        double selectedCustomerBalance = customers. get(customerId).getBalance();
+        Customer selectedCustomer =new Customer(customerId, selectedCustomerName, selectedCustomerBalance);
+        System.out.println(selectedCustomer);
+
+        System.out.println("Please enter the name of product you wish to buy it: ");
+        String productName = scanner.nextLine();
+        System.out.println("Please enter the quantity you wish to buy: ");
+        int quantityToBuy = scanner.nextInt();
+        double selectedProductPrice = products.get(Integer.parseInt(productName)).getPrice();
+        Product selectedProduct = new Product(productName, selectedProductPrice, quantityToBuy);
+
+        double totalPrice = selectedProduct.getPrice() * quantityToBuy;
+        System.out.println(totalPrice);
+
+        int availableInShop = availableQuantity(productName, quantityToBuy);
+        if (availableInShop == 0) {
+        System.out.println("Sorry, product not available in the shop at the moment!");
+        }
+        int balanceChecker = checkBalance(customerId, totalPrice);
+        if (balanceChecker == 1) {
+        reduceCustomerBalance(selectedCustomer.getCustomerId(), totalPrice);
+        reduceProductQuantity(selectedProduct.getProductName(), quantityToBuy);
+        System.out.println("Your purchase was successful!");
+        }
+        if (balanceChecker == 0) {
+        System.out.println("You don't have enough money at your wallet!");
+        }
+    }
+
+
+    public int checkBalance(int customerId, double totalPrice){
+        int check = 0;
+        for (Customer customer: customers) {
+            if (customer.getCustomerId() == customerId) {
+                if (customer.getBalance() >= totalPrice) {
+                    check = 1;
+                    break;
+                }
+            }
+        }
+        return check;
+    }
+
+    public void reduceCustomerBalance(int customerId, double totalPrice) {
+            for (Customer customer : customers) {
+                if (customer.getCustomerId() == customerId) {
+                    double newBalance= customer.balance - totalPrice;
+                    customer.setBalance(newBalance);
+                    customer.setMoneySpend(totalPrice);
+                    break;
+                }
+            }
         }
 
+        public int availableQuantity(String productName, int quantityToBuy){
+        int availableInShop = 0;
+            Product selectedProduct = products.get(Integer.parseInt(productName));
+            if (selectedProduct.getQuantity() >= quantityToBuy){
+                availableInShop = 1;
+            }
+            return availableInShop;
+            }
 
-
-//    public int checkBalance (String customerName, double totalPrice){
-//        int temporary = 0;
-//        for (Customer customer : customers) {
-//            if (customer.customerName.equals(customerName)) {
-//                if (balance >= totalPrice) {
-//                    temporary = 1;
-//                    break;
-//                }
-//            }
-//        }
-//        return temporary;
-//    }
-//    public String validateCustomer(String name){
-//        try {
-//            this.isValidated = this.
-//            if (!this.isValidated) return "This Customer doesn't exist at this shop!";
-//        }catch (Exception e) {
-//            return "Error: " + e.getMessage();
-//        }
-//        return "Customer is accepted to the shop. Enjoy your time at Walmart!";
-//    }
-//
-//    public void buyProduct() {
-//            String customerName = "";
-//            double totalPrice;
-//
-//
-//
-//            System.out.println("Please enter your name: ");
-//            customerName = scanner.next();
-//
-//            int checkBalance = customers.checkBalance(customerName, totalPrice);
-//
-//            System.out.println("Please enter the name of product you wish to buy it: ");
-//            Product productName = scanner.next();
-//
-//            System.out.println("Please enter the quantity you wish to buy: ");
-//            int quantity = scanner.nextInt();
-//
-//
-//        double totalPrice = productName.getPrice() * quantity;
-//            double newBalance = customerName.balance - totalPrice;
-//    }
+    public void reduceProductQuantity (String productName, int quantityToBuy){
+        for (Product product: products){
+            if (product.getProductName() == productName){
+                int newQuantity = product.getQuantity() - quantityToBuy;
+                product.setQuantity(newQuantity);
+                break;
+            }
+        }
+    }
 
 }

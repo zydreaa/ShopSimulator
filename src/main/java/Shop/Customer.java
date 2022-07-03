@@ -5,19 +5,36 @@ import java.util.ArrayList;
 public class Customer {
 
     public static ArrayList<Customer> customers = new ArrayList<>();
+    public int customerId;
     private String customerName;
     double balance;
     double moneySpend;
 
-    public Customer(String customerName, double balance) {
+    public Customer(int customerId, String customerName, double balance) {
+        this.customerId = customerId;
         this.customerName = customerName;
-        this.balance = balance;
+        this.balance = getBalance();
     }
 
     public Customer (String customerName, double balance, double moneySpend){
         this.customerName = customerName;
         this.balance = balance;
         this.moneySpend = moneySpend;
+    }
+
+    public Customer(int customerId, String customerName, double balance, double moneySpend) {
+        this.customerId = customerId;
+        this.customerName = customerName;
+        this.balance = balance;
+        this.moneySpend = moneySpend;
+    }
+
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
 
     public String getCustomerName() {
@@ -42,9 +59,10 @@ public class Customer {
 
     @Override
     public String toString() {
-        return " | " + customerName + " | " + balance + " | " + moneySpend + " | ";
+        return "Customer ID:" + customerId +
+                " | customerName: " + customerName +
+                "| Balance: " + balance +
+                "\n";
     }
-
-
 }
 

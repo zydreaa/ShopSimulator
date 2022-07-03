@@ -29,9 +29,9 @@ public class Main {
                 case "2":
                     options.addProduct();
                     break;
-//            case 3:
-//                options.buyProduct();
-//                break;
+                case "3":
+                    options.buyProduct();
+                    break;
                 case "4":
                     options.addSales();
                     break;
@@ -47,6 +47,7 @@ public class Main {
                 case "0":
                     exit = true;
                     break;
+                default:
             }
         }while (!exit);
     }
