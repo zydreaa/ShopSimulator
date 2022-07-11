@@ -6,7 +6,7 @@ public class Customer {
 
     public static ArrayList<Customer> customers = new ArrayList<>();
     public int customerId;
-    private String customerName;
+    public String customerName;
     double balance;
     double moneySpend;
 
@@ -57,12 +57,10 @@ public class Customer {
         this.moneySpend = moneySpend;
     }
 
-    @Override
-    public String toString() {
-        return "Customer ID:" + customerId +
-                " | customerName: " + customerName +
-                "| Balance: " + balance +
-                "\n";
+        @Override
+        public String toString() {
+            return "Customer name: " + customerName +
+                    "| Balance: " + balance;
+        }
     }
-}
 

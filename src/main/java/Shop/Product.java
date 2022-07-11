@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Product {
     public static ArrayList<Product> products = new ArrayList<>();
-    private String productName;
+    public String productName;
     double price;
     int quantity;
 
@@ -44,7 +44,8 @@ public class Product {
 
     @Override
     public String toString() {
-        return " | " + productName + " | " + price + " | " + quantity + " | ";
+        return productName + " | Price: " + price +
+                " | Available quantity: " + quantity;
     }
 
 

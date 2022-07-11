@@ -1,16 +1,33 @@
 package Shop;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Options {
 
+    private JFrame frame;
     Scanner scanner = new Scanner(System.in);
     ArrayList<Customer> customers = new ArrayList<>();
     ArrayList<Product> products = new ArrayList<>();
     ArrayList<Sales> sales = new ArrayList<>();
 
+    public Options() {
+        frame = new JFrame();
+    }
+
+    public void existingCustomers(){
+        Customer zydre = new Customer(customers.size(), "Zydre", 50, 0);
+        customers.add(zydre);
+        Customer benas = new Customer(customers.size(),"Benas", 25, 0);
+        customers.add(benas);
+        Customer rima = new Customer(customers.size(),"Rima", 15, 0);
+        customers.add(rima);
+    }
+
     void addCustomer() {
+        existingCustomers();
+
         int customerId = customers.size();
         System.out.println("Please enter your name: ");
         String customerName = scanner.next();
@@ -25,6 +42,9 @@ public class Options {
         System.out.println("Customer " + newCustomer.getCustomerName() + "  now is a member of Walmart!");
     }
 
+    public ArrayList<Customer> getAllCustomers(){
+        return this.customers;
+    }
 
     void addProduct() {
         System.out.println("Please enter the name of product: ");
@@ -41,7 +61,12 @@ public class Options {
         System.out.println("New product was added to shop!");
     }
 
+    public ArrayList<Product> getAllProducts(){
+        return this.products;
+    }
+
     public void addSales() {
+
         System.out.println("Please enter the name of product: ");
         String productName = scanner.next();
 
@@ -53,17 +78,11 @@ public class Options {
 
         Sales newSale = new Sales(productName, price, quantity);
         this.sales.add(newSale);
+        this.products.add(newSale); //adds to main product list as well
         System.out.println("New product was added on shop sale list!");
     }
 
-    public void allSales() {
-        //Existing sale products in the shop
-        Sales butter = new Sales("butter", 0.99, 5);
-        this.sales.add(butter);
-        Sales yogurt = new Sales("yogurt", 0.49, 5);
-        this.sales.add(yogurt);
-        Sales chocolate = new Sales("chocolate", 0.89, 10);
-        this.sales.add(chocolate);
+    public void viewSales() {
 
         //Report table of all sale products in the shop
         System.out.println("--------------------------------------------------");
@@ -80,16 +99,9 @@ public class Options {
         System.out.println("--------------------------------------------------");
     }
 
-    public void allCustomers() {
-
-        //Existing customers in the shop
-        Customer zydre = new Customer(customers.size(), "zydre", 100, 0);
-        this.customers.add(zydre);
-        Customer benas = new Customer(customers.size(),"Benas", 50, 0);
-        this.customers.add(benas);
-        Customer rima = new Customer(customers.size(),"Rima", 150, 0);
-        this.customers.add(rima);
-
+    public void viewAllCustomers() {
+    //Existing customers in the shop
+        existingCustomers();
 
         //Report table of all customers
         System.out.println("--------------------------------------------------");
@@ -106,21 +118,22 @@ public class Options {
         System.out.println("--------------------------------------------------");
     }
 
-    public void allProducts() {
-        //Existing products in the shop
-        Product fish = new Product("fish", 14.99, 20);
-        this.products.add(fish);
-        Product meat = new Product("meat", 9.99, 15);
-        this.products.add(meat);
-        Product bread = new Product("bread", 2.49, 10);
-        this.products.add(bread);
-        Product avocado = new Product("avocado", 0.99, 15);
-        this.products.add(avocado);
-        Product eggs = new Product("eggs", 1.49, 10);
-        this.products.add(eggs);
+    public void existingProducts() {
+        Product fish = new Product("Fish", 14.99, 20);
+        products.add(fish);
+        Product meat = new Product("Meat", 9.99, 15);
+        products.add(meat);
+        Product bread = new Product("Bread", 2.49, 10);
+        products.add(bread);
+        Product avocado = new Product("Avocado", 0.99, 15);
+        products.add(avocado);
+        Product eggs = new Product("Eggs", 1.49, 10);
+        products.add(eggs);
+    }
 
-        //Existing sale products in the shop added to all product report
-        allSales();
+    public void viewAllProducts() {
+        //Existing products in the shop
+        existingProducts();
 
         //Report table of all products in the shop
         System.out.println("--------------------------------------------------");
@@ -134,86 +147,69 @@ public class Options {
             System.out.format("%15s %15s %15s", product.getProductName(), product.getPrice(), product.getQuantity());
             System.out.println();
         }
-        for (Sales sales : sales) {
-            System.out.format("%15s %15s %15s", sales.getProductName(), sales.getPrice(), sales.getQuantity());
-            System.out.println();
-        }
         System.out.println("--------------------------------------------------");
     }
 
     public void buyProduct() {
+        try{
+            existingCustomers();
+            ArrayList<Customer> allCustomers = getAllCustomers();
+            Customer selectedCustomer = (Customer) JOptionPane.showInputDialog(
+                this.frame,
+                "Select your name",
+                "Customer name",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                allCustomers.toArray(),
+                allCustomers.toArray()[0]
+        );
 
-        System.out.println("Please enter your customer ID: ");
-        int customerId = scanner.nextInt();
-        String selectedCustomerName = customers. get(customerId).getCustomerName();
-        double selectedCustomerBalance = customers. get(customerId).getBalance();
-        Customer selectedCustomer =new Customer(customerId, selectedCustomerName, selectedCustomerBalance);
-        System.out.println(selectedCustomer);
+        existingProducts();
 
-        System.out.println("Please enter the name of product you wish to buy it: ");
-        String productName = scanner.nextLine();
-        System.out.println("Please enter the quantity you wish to buy: ");
-        int quantityToBuy = scanner.nextInt();
-        double selectedProductPrice = products.get(Integer.parseInt(productName)).getPrice();
-        Product selectedProduct = new Product(productName, selectedProductPrice, quantityToBuy);
+        ArrayList<Product> allProducts = getAllProducts();
+        Product selectedProduct = (Product) JOptionPane.showInputDialog(
+                this.frame,
+                "Select product to buy",
+                "Buy product",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                allProducts.toArray(),
+                allProducts.toArray()[0]
+        );
 
-        double totalPrice = selectedProduct.getPrice() * quantityToBuy;
-        System.out.println(totalPrice);
+        Integer quantity = Integer.valueOf(JOptionPane.showInputDialog("How many do you want to buy?"));
+        double totalPrice = selectedProduct.getPrice() * quantity;
+        if (selectedProduct.getQuantity() < quantity) throw new Exception("Sorry, product not available in the shop at the moment!");
 
-        int availableInShop = availableQuantity(productName, quantityToBuy);
-        if (availableInShop == 0) {
-        System.out.println("Sorry, product not available in the shop at the moment!");
-        }
-        int balanceChecker = checkBalance(customerId, totalPrice);
-        if (balanceChecker == 1) {
-        reduceCustomerBalance(selectedCustomer.getCustomerId(), totalPrice);
-        reduceProductQuantity(selectedProduct.getProductName(), quantityToBuy);
-        System.out.println("Your purchase was successful!");
-        }
-        if (balanceChecker == 0) {
-        System.out.println("You don't have enough money at your wallet!");
+        if (selectedCustomer.getBalance() < totalPrice) throw new Exception("Not enough balance");
+
+        selectedProduct.setQuantity(selectedProduct.getQuantity() - quantity);
+        selectedCustomer.setBalance(selectedCustomer.getBalance() - totalPrice);
+        selectedCustomer.setMoneySpend(selectedCustomer.getMoneySpend() + totalPrice);
+
+        updateProductQuantity(selectedProduct);
+        updateCustomerBalance(selectedCustomer);
+
+        JOptionPane.showMessageDialog(frame,"Product Purchased Successfully");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(frame, e.getMessage());
         }
     }
 
-
-    public int checkBalance(int customerId, double totalPrice){
-        int check = 0;
-        for (Customer customer: customers) {
-            if (customer.getCustomerId() == customerId) {
-                if (customer.getBalance() >= totalPrice) {
-                    check = 1;
-                    break;
-                }
+    public void updateCustomerBalance(Customer selectedCustomer) {
+        for (Customer customer : customers) {
+            if (customer.getCustomerId() == selectedCustomer.getCustomerId()) {
+               selectedCustomer.setBalance(customer.getBalance());
+               selectedCustomer.setMoneySpend(customer.getMoneySpend());
+               break;
             }
         }
-        return check;
     }
 
-    public void reduceCustomerBalance(int customerId, double totalPrice) {
-            for (Customer customer : customers) {
-                if (customer.getCustomerId() == customerId) {
-                    double newBalance= customer.balance - totalPrice;
-                    customer.setBalance(newBalance);
-                    customer.setMoneySpend(totalPrice);
-                    break;
-                }
-            }
-        }
-
-        public int availableQuantity(String productName, int quantityToBuy){
-        int availableInShop = 0;
-            Product selectedProduct = products.get(Integer.parseInt(productName));
-            if (selectedProduct.getQuantity() >= quantityToBuy){
-                availableInShop = 1;
-            }
-            return availableInShop;
-            }
-
-    public void reduceProductQuantity (String productName, int quantityToBuy){
+    public void updateProductQuantity(Product selectedProduct){
         for (Product product: products){
-            if (product.getProductName() == productName){
-                int newQuantity = product.getQuantity() - quantityToBuy;
-                product.setQuantity(newQuantity);
+            if (product.getProductName() == selectedProduct.getProductName()){
+                product.setQuantity(product.getQuantity());
                 break;
             }
         }

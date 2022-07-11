@@ -1,28 +1,32 @@
 package Shop;
 
-import java.util.Scanner;
+import javax.swing.*;
 
 public class Main {
-    static Options options =new Options();
 
-    public static void main(String[] args) {
-        boolean exit = false;
 
-        do {
-            System.out.println("Welcome to Walmart!");
-            System.out.println("Please choose an option below: ");
-            System.out.println(" 1. Add new customer");
-            System.out.println(" 2. Add new product");
-            System.out.println(" 3. Buy product");
-            System.out.println(" 4. Add sale product");
-            System.out.println(" 5. Show sales in the shop");
-            System.out.println(" 6. Show all products in the shop");
-            System.out.println(" 7. Report of the shop customers");
-            System.out.println(" 0. QUIT");
+    public static void main(String[] args) throws Exception {
 
-            Scanner scanner = new Scanner(System.in);
-            String option = scanner.nextLine();
-            switch (option) {
+        Options options = new Options();
+
+        JOptionPane.showMessageDialog(null, "Welcome to Walmart!");
+        String menu = "";
+
+        while (!menu.equals("0")) {
+
+            menu = JOptionPane.showInputDialog(
+                    "Please enter your choice:\n" +
+                    "1. Add new customer\n" +
+                    "2. Add new product\n" +
+                    "3. Buy product\n" +
+                    "4. Add sales product\n" +
+                    "5. Show sales in the shop\n" +
+                    "6. Show all products in the shop\n" +
+                    "7. Show report of the shop customers and balances\n" +
+                    "0. QUIT"
+                    );
+
+            switch (menu) {
                 case "1":
                     options.addCustomer();
                     break;
@@ -36,20 +40,21 @@ public class Main {
                     options.addSales();
                     break;
                 case "5":
-                    options.allSales();
+                    options.viewSales();
                     break;
                 case "6":
-                    options.allProducts();
+                    options.viewAllProducts();
                     break;
                 case "7":
-                    options.allCustomers();
+                    options.viewAllCustomers();
                     break;
                 case "0":
-                    exit = true;
+                    System.exit(1);
                     break;
                 default:
+                    System.out.println("Please enter one of the valid options or QUIT!");
             }
-        }while (!exit);
+        }
     }
 }
 
